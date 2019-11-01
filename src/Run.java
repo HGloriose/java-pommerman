@@ -33,7 +33,7 @@ public class Run {
 
         //default
         if(args.length == 0)
-            args = new String[]{"0", "1", "1", "-1", "2", "2", "4", "5"};
+            args = new String[]{"0", "1", "1", "-1", "2", "4", "4", "5"};
 
         if(args.length != 8) {
             printHelp();
@@ -207,7 +207,11 @@ public class Run {
                 for (int p = 0; p < g.nPlayers(); p++) {
                     players.get(p).reset(playerSeed, p);
                 }
+                    System.out.println("Working Directory = " +
+                            System.getProperty("user.dir"));
+
                 Types.RESULT[] results = g.run(useSeparateThreads);
+
 
                 for (int pIdx = 0; pIdx < numPlayers; pIdx++) {
                     switch (results[pIdx]) {

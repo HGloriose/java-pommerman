@@ -11,6 +11,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import java.io.File;
+import java.io.IOException;
+
+
 /**
  * An object that stores the minimal information necessary to reproduce a full replay of a game.
  * It can be serialized and stored to the gamelogs folder
@@ -45,9 +49,14 @@ public class GameLog implements Serializable {
     public void serialize(){
 
         File file = new File(GAMELOGS_PATH);
+        System.out.println("file.exists(), file = GAMELOGS_PATH " + file.exists());
         if (! file.exists()){
-            file.mkdir();
+            System.out.println("attempt to create directory");
+            file.mkdirs();
+            System.out.println("success: attempt to create directory");
         }
+
+        System.out.println("file.exists(), file = GAMELOGS_PATH " + file.exists());
 
         if (file.listFiles() == null) {
             throw new Error("Folder specified at "+ GAMELOGS_PATH +" does not exist nor could be created.");
@@ -71,7 +80,7 @@ public class GameLog implements Serializable {
     public void serializeJSON(String gameIdStr){
         File file = new File(JSON_GAMELOGS_PATH + gameIdStr + "/");
         if (! file.exists()){
-            file.mkdir();
+            file.mkdirs();
         }
 
         if (file.listFiles() == null) {
@@ -81,6 +90,8 @@ public class GameLog implements Serializable {
         String path = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "["+size+"x"+size+"].json";
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(this);
+//        System.out.println("game: "+ json);
+
 
         try {
             PrintWriter out = new PrintWriter(path);

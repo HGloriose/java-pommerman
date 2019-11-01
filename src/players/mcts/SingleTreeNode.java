@@ -32,12 +32,12 @@ public class SingleTreeNode
     private GameState rootState;
     private StateHeuristic rootStateHeuristic;
 
-    SingleTreeNode(MCTSParams p, Random rnd, int num_actions, Types.ACTIONS[] actions) {
+    SingleTreeNode(MCTSParams p, Random rnd, int num_actions, Types.ACTIONS[] actions) { //root constructor
         this(p, null, -1, rnd, num_actions, actions, 0, null);
     }
 
     private SingleTreeNode(MCTSParams p, SingleTreeNode parent, int childIdx, Random rnd, int num_actions,
-                           Types.ACTIONS[] actions, int fmCallsCount, StateHeuristic sh) {
+                           Types.ACTIONS[] actions, int fmCallsCount, StateHeuristic sh) { // not root constructor - stateHeuristics: evaluateState(GameState gs) depends on the heuristic used
         this.params = p;
         this.fmCallsCount = fmCallsCount;
         this.parent = parent;
@@ -79,12 +79,12 @@ public class SingleTreeNode
 
             GameState state = rootState.copy();
             ElapsedCpuTimer elapsedTimerIteration = new ElapsedCpuTimer();
-            SingleTreeNode selected = treePolicy(state);
-            double delta = selected.rollOut(state);
-            backUp(selected, delta);
+            SingleTreeNode selected = treePolicy(state); //recomendation policy ? not UCB (in the code though) so selection & expansion
+            double delta = selected.rollOut(state); //simulation
+            backUp(selected, delta); //backpropagation
 
             //Stopping condition
-            if(params.stop_type == params.STOP_TIME) {
+            if(params.stop_type == params.STOP_TIME) { // they are always equal one another, unless update somewhere
                 numIters++;
                 acumTimeTaken += (elapsedTimerIteration.elapsedMillis()) ;
                 avgTimeTaken  = acumTimeTaken/numIters;
@@ -170,9 +170,9 @@ public class SingleTreeNode
         for (SingleTreeNode child : this.children)
         {
             double hvVal = child.totValue;
-            double childValue =  hvVal / (child.nVisits + params.epsilon);
+            double childValue =  hvVal / (child.nVisits + params.epsilon); //
 
-            childValue = Utils.normalise(childValue, bounds[0], bounds[1]);
+            childValue = Utils.normalise(childValue, bounds[0], bounds[1]); //- Q(s,a)
 
             double uctValue = childValue +
                     params.K * Math.sqrt(Math.log(this.nVisits + 1) / (child.nVisits + params.epsilon));
@@ -306,7 +306,7 @@ public class SingleTreeNode
         return selected;
     }
 
-    private int bestAction()
+    private int bestAction() //recommendation policy
     {
         int selected = -1;
         double bestValue = -Double.MAX_VALUE;

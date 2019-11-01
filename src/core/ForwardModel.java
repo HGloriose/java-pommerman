@@ -9,7 +9,6 @@ import utils.LevelGenerator;
 import utils.Types;
 import utils.Vector2d;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 import static utils.Types.*;
@@ -1071,17 +1070,12 @@ public class ForwardModel {
 
         while(i< board.length){
         for (Types.TILETYPE[] gameObjects : board) {
-            //for (int i =0; i< board.length; i++) {
             while(j< board.length){
                 for (Types.TILETYPE type : gameObjects) {
 
-                    //for (int j=0; j< board.length; j++) {
-
                     if (type.getKey() < Types.TILETYPE.AGENT0.getKey() && type.getKey() > 0) {
                             boardArray[i][j] = type.getKey();
-                            //System.out.println("boardArray[i][j]: " + i + ", " + j);
                             j++;
-//                            System.out.println("boardArray: " + Arrays.deepToString(boardArray));
                         } else {
 
                             if (type == Types.TILETYPE.PASSAGE) {

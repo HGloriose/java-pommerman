@@ -6,6 +6,9 @@ import players.Player;
 import players.SimonSaysPlayer;
 import utils.*;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.*;
 
 import static utils.Types.*;
@@ -39,8 +42,8 @@ public class Game {
     private String gameIdStr;
 
     // Log flags
-    public static boolean LOG_GAME = false;
-    public static boolean LOG_GAME_JSON = false; // If the game is being logged, should it be saved to json
+    public static boolean LOG_GAME = true;
+    public static boolean LOG_GAME_JSON = true; // If the game is being logged, should it be saved to json
 
     // Variables for multi-threaded run 
     private Actor[] actors = new Actor[NUM_PLAYERS];
@@ -245,6 +248,8 @@ public class Game {
         if (LOG_GAME) {
             if (LOG_GAME_JSON) {
                 gameLog.serializeJSON(gameIdStr);
+                System.out.println("gameLog: " + gameLog);
+
             } else {
                 gameLog.serialize();
             }
@@ -301,11 +306,13 @@ public class Game {
     /**
      * Get player actions, 1 for each avatar still in the game. Called at every frame.
      */
+
     private Types.ACTIONS[] getAvatarActions() {
         // Get player actions, 1 for each avatar still in the game
         Types.ACTIONS[] actions = new Types.ACTIONS[NUM_PLAYERS];
         for (int i = 0; i < NUM_PLAYERS; i++) {
             Player p = players.get(i);
+            toSaveGs = toSaveGs + p.toString() + "\t"+ gs.model.toArray().toString() + "\t";
 
             // Check if this player is still playing
             if (gameStateObservations[i].winner() == Types.RESULT.INCOMPLETE) {
@@ -329,6 +336,11 @@ public class Game {
                 // This player is dead and action will be ignored
                 actions[i] = Types.ACTIONS.ACTION_STOP;
             }
+
+            //System.out.println("Player: " + p.getPlayerID() + " " + actions[p.getPlayerID()] + "\n" +  gs.toString()+ "\n");
+            //gs.model.toArray();
+            //System.out.println("Player: " + p.getPlayerID() + " " + actions[p.getPlayerID()] + "\n" + gs.model.toArray().toString()+ " " + "\n");
+            toSaveGs = toSaveGs + "\t" + actions[i] + gs.model.toArray().toString() + "\n";
         }
         return actions;
     }

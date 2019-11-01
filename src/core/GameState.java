@@ -229,7 +229,10 @@ public class GameState {
     }
 
     public Types.RESULT winner() {
-        return avatar != null? avatar.getWinner() : Types.RESULT.INCOMPLETE;
+        return avatar != null? avatar.getWinner() : Types.RESULT.INCOMPLETE; // They both retrun the same thing?
+        // ? is a ternary argument - boolean statement ? true result : false result;
+        // if the avatar != null, ie.e if the gameMode !=null that is if the type of game has been specified: FFA or Team or...
+        // true that the gameMode has been defined - then avatar.getWinner() -- return winner --> Types.RESULT.INCOMPLETE --> the game is incomplete?
     }
 
     public int getBlastStrength() {

@@ -30,7 +30,7 @@ public class MCTSPlayer extends ParameterizedPlayer {
         this(seed, id, new MCTSParams());
     }
 
-    public MCTSPlayer(long seed, int id, MCTSParams params) {
+    public MCTSPlayer(long seed, int id, MCTSParams params) { //MCTSParams -  specify the configuration of MCTS
         super(seed, id, params);
         reset(seed, id);
 
@@ -39,6 +39,7 @@ public class MCTSPlayer extends ParameterizedPlayer {
         int i = 0;
         for (Types.ACTIONS act : actionsList) {
             actions[i++] = act;
+//            System.out.println(act);
         }
     }
 
@@ -56,6 +57,7 @@ public class MCTSPlayer extends ParameterizedPlayer {
 
     @Override
     public Types.ACTIONS act(GameState gs) {
+        //System.out.println(gs);
 
         // TODO update gs
         if (gs.getGameMode().equals(Types.GAME_MODE.TEAM_RADIO)){
@@ -81,6 +83,7 @@ public class MCTSPlayer extends ParameterizedPlayer {
         // TODO update message memory
 
         //... and return it.
+        //System.out.println(actions[action]);
         return actions[action];
     }
 
