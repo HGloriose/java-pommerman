@@ -90,7 +90,6 @@ public class GameLog implements Serializable {
         String path = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "["+size+"x"+size+"].json";
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(this);
-//        System.out.println("game: "+ json);
 
 
         try {

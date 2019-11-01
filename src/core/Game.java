@@ -9,6 +9,9 @@ import utils.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 import static utils.Types.*;
@@ -42,8 +45,8 @@ public class Game {
     private String gameIdStr;
 
     // Log flags
-    public static boolean LOG_GAME = true;
-    public static boolean LOG_GAME_JSON = true; // If the game is being logged, should it be saved to json
+    public static boolean LOG_GAME = false;
+    public static boolean LOG_GAME_JSON = false; // If the game is being logged, should it be saved to json
 
     // Variables for multi-threaded run 
     private Actor[] actors = new Actor[NUM_PLAYERS];
@@ -198,6 +201,13 @@ public class Game {
      * @param wi input for the window.
      * @return the results of the game, per player.
      */
+
+    String [] toSaveGs;
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    String json;
+    String JSON_GAMELOGS_PATH = "res/gamelogs/";
+    int REP = 0;
+
     public Types.RESULT[] run(GUI frame, WindowInput wi, boolean separateThreads)
     {
         if (frame == null || wi == null)
@@ -221,6 +231,27 @@ public class Game {
             if (firstEnd && isEnded()) {
                 firstEnd = false;
                 results = terminate();
+                json = gson.toJson(toSaveGs.toString());
+                System.out.println(toSaveGs);
+
+                File file = new File(JSON_GAMELOGS_PATH + gameIdStr + "/");
+                if (! file.exists()){
+                    file.mkdirs();
+                }
+
+                if (file.listFiles() == null) {
+                    throw new Error("Folder specified at "+ JSON_GAMELOGS_PATH +" does not exist nor could be created.");
+                }
+
+                String path = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "["+size+"x"+size+"].json";
+
+                try {
+                    PrintWriter out = new PrintWriter(path);
+                    out.println(json);
+                    out.close();
+                } catch (IOException i) {
+                    i.printStackTrace();
+                }
 
                 if (!VISUALS) {
                     // The game has ended, end the loop if we're running without visuals.
@@ -306,13 +337,13 @@ public class Game {
     /**
      * Get player actions, 1 for each avatar still in the game. Called at every frame.
      */
-
     private Types.ACTIONS[] getAvatarActions() {
+        String tempString = "";
         // Get player actions, 1 for each avatar still in the game
         Types.ACTIONS[] actions = new Types.ACTIONS[NUM_PLAYERS];
         for (int i = 0; i < NUM_PLAYERS; i++) {
             Player p = players.get(i);
-            toSaveGs = toSaveGs + p.toString() + "\t"+ gs.model.toArray().toString() + "\t";
+            tempString = tempString + p + "\t"+ gs.model.toArray().toString() + "\t";
 
             // Check if this player is still playing
             if (gameStateObservations[i].winner() == Types.RESULT.INCOMPLETE) {
@@ -340,7 +371,8 @@ public class Game {
             //System.out.println("Player: " + p.getPlayerID() + " " + actions[p.getPlayerID()] + "\n" +  gs.toString()+ "\n");
             //gs.model.toArray();
             //System.out.println("Player: " + p.getPlayerID() + " " + actions[p.getPlayerID()] + "\n" + gs.model.toArray().toString()+ " " + "\n");
-            toSaveGs = toSaveGs + "\t" + actions[i] + gs.model.toArray().toString() + "\n";
+            tempString = tempString + "\t" + actions[i] + gs.model.toArray().toString() + "\n";
+            tosaveGs = toSaveGs + [tempString];
         }
         return actions;
     }
