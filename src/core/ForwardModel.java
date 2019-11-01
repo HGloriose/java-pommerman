@@ -9,6 +9,7 @@ import utils.LevelGenerator;
 import utils.Types;
 import utils.Vector2d;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 import static utils.Types.*;
@@ -1025,7 +1026,6 @@ public class ForwardModel {
         addAgent(board.length - 2, board[1].length - 2, 3);
     }
 
-
     @Override
     public String toString(){
         StringBuilder stringBuilder = new StringBuilder();
@@ -1061,6 +1061,57 @@ public class ForwardModel {
         }
         stringBuilder.append("\n");
         return stringBuilder.toString();
+    }
+
+    public String toArray(){
+        int[][] boardArray;
+        boardArray = new int[11][11];
+        int j=0;
+        int i=0;
+
+        while(i< board.length){
+        for (Types.TILETYPE[] gameObjects : board) {
+            //for (int i =0; i< board.length; i++) {
+            while(j< board.length){
+                for (Types.TILETYPE type : gameObjects) {
+
+                    //for (int j=0; j< board.length; j++) {
+
+                    if (type.getKey() < Types.TILETYPE.AGENT0.getKey() && type.getKey() > 0) {
+                            boardArray[i][j] = type.getKey();
+                            //System.out.println("boardArray[i][j]: " + i + ", " + j);
+                            j++;
+//                            System.out.println("boardArray: " + Arrays.deepToString(boardArray));
+                        } else {
+
+                            if (type == Types.TILETYPE.PASSAGE) {
+                                boardArray[i][j] = 0;
+                                j++;
+                            } else if (type == Types.TILETYPE.AGENT0) {
+                                boardArray[i][j] = 10;
+                                j++;
+                            } else if (type == Types.TILETYPE.AGENT1) {
+                                boardArray[i][j] = 11;
+                                j++;
+                            } else if (type == Types.TILETYPE.AGENT2) {
+                                boardArray[i][j] = 12;
+                                j++;
+                            } else if (type == Types.TILETYPE.AGENT3) {
+                                boardArray[i][j] = 13;
+                                j++;
+                            } else {
+                                boardArray[i][j] = -1;
+                                j++;
+                            }
+                        }
+                }
+
+                }
+            i++; j=0;
+        }
+        }
+        //System.out.println("boardArray: " + Arrays.deepToString(boardArray));
+        return Arrays.deepToString(boardArray);
     }
 
     /**
