@@ -202,7 +202,8 @@ public class Game {
      * @return the results of the game, per player.
      */
 
-    String [] toSaveGs;
+    //String [] toSaveGs;
+    ArrayList<String> toSaveGs = new ArrayList<String>();
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     String json;
     String JSON_GAMELOGS_PATH = "res/gamelogs/";
@@ -231,7 +232,7 @@ public class Game {
             if (firstEnd && isEnded()) {
                 firstEnd = false;
                 results = terminate();
-                json = gson.toJson(toSaveGs.toString());
+                json = gson.toJson(toSaveGs);
                 System.out.println(toSaveGs);
 
                 File file = new File(JSON_GAMELOGS_PATH + gameIdStr + "/");
@@ -244,6 +245,7 @@ public class Game {
                 }
 
                 String path = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "["+size+"x"+size+"].json";
+                String textPath = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "["+size+"x"+size+"].txt";
 
                 try {
                     PrintWriter out = new PrintWriter(path);
@@ -252,6 +254,39 @@ public class Game {
                 } catch (IOException i) {
                     i.printStackTrace();
                 }
+
+                try {
+                    PrintWriter textOut = new PrintWriter(textPath);
+                    textOut.println(toSaveGs.toString());
+                    textOut.close();
+                } catch (IOException i) {
+                i.printStackTrace();
+
+                }
+
+                // Our example data
+//                List<List<String>> rows = Arrays.asList(
+//                        Arrays.asList("Jean", "author", "Java"),
+//                        Arrays.asList("David", "editor", "Python"),
+//                        Arrays.asList("Scott", "editor", "Node.js")
+//                );
+
+//                FileWriter csvWriter = new FileWriter("new.csv");
+//                csvWriter.append("Name");
+//                csvWriter.append(",");
+//                csvWriter.append("Role");
+//                csvWriter.append(",");
+//                csvWriter.append("Topic");
+//                csvWriter.append("\n");
+//
+//                for (List<String> rowData : rows) {
+//                    csvWriter.append(String.join(",", rowData));
+//                    csvWriter.append("\n");
+//                }
+//
+//                csvWriter.flush();
+//                csvWriter.close();
+
 
                 if (!VISUALS) {
                     // The game has ended, end the loop if we're running without visuals.
@@ -338,10 +373,11 @@ public class Game {
      * Get player actions, 1 for each avatar still in the game. Called at every frame.
      */
     private Types.ACTIONS[] getAvatarActions() {
-        String tempString = "";
+        String tempString;
         // Get player actions, 1 for each avatar still in the game
         Types.ACTIONS[] actions = new Types.ACTIONS[NUM_PLAYERS];
         for (int i = 0; i < NUM_PLAYERS; i++) {
+            tempString = "";
             Player p = players.get(i);
             tempString = tempString + p + "\t"+ gs.model.toArray().toString() + "\t";
 
@@ -371,8 +407,8 @@ public class Game {
             //System.out.println("Player: " + p.getPlayerID() + " " + actions[p.getPlayerID()] + "\n" +  gs.toString()+ "\n");
             //gs.model.toArray();
             //System.out.println("Player: " + p.getPlayerID() + " " + actions[p.getPlayerID()] + "\n" + gs.model.toArray().toString()+ " " + "\n");
-            tempString = tempString + "\t" + actions[i] + gs.model.toArray().toString() + "\n";
-            tosaveGs = toSaveGs + [tempString];
+            tempString = tempString + actions[i] + "\n"; // + "\t" + gs.model.toArray().toString();
+            toSaveGs.add(tempString);
         }
         return actions;
     }
