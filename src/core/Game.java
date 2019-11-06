@@ -452,7 +452,7 @@ public class Game {
             System.out.println("Float.parseFloat(tempAvPosition[0]+1): "+ Float.parseFloat(tempAvPosition[0]+1));
             System.out.println("(size - Float.parseFloat(tempAvPosition[0]+1)): "+ (size - Float.parseFloat(tempAvPosition[0])));
 
-            float squarePositionFraction = (Float.parseFloat(tempAvPosition[1]+0 * size) - (size - Float.parseFloat((tempAvPosition[0]+0))))/121;
+            float squarePositionFraction = ((Float.parseFloat(tempAvPosition[1]) * size) - (size - Float.parseFloat(tempAvPosition[0])))/121;
 
 //            float gsArraywithPosition [][] = new float [size][size];
 //            for (int x = 0; x < boardSize; x++) {
