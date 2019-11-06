@@ -203,6 +203,11 @@ public class Game {
      */
 
     ArrayList<String> toSaveGs = new ArrayList<String>();
+    ArrayList<String> toSaveGs5 = new ArrayList<String>();
+    ArrayList<String> toSaveGs6 = new ArrayList<String>();
+    ArrayList<String> toSaveGs7 = new ArrayList<String>();
+    ArrayList<String> toSaveGs8 = new ArrayList<String>();
+
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     String json;
     String JSON_GAMELOGS_PATH = "res/gamelogs/";
@@ -248,13 +253,25 @@ public class Game {
                             playerId = p.toString();
                             //System.out.println("playerId: " + playerId);
                             toSaveGs.removeIf(x -> x.startsWith(playerId));
+                            toSaveGs5.removeIf(x -> x.startsWith(playerId));
+                            toSaveGs6.removeIf(x -> x.startsWith(playerId));
+                            toSaveGs7.removeIf(x -> x.startsWith(playerId));
+                            toSaveGs8.removeIf(x -> x.startsWith(playerId));
                             break;
                     }
                 }
 
                 toSaveGs.removeIf(x -> x.contains("ACTION_STOP"));
+                toSaveGs5.removeIf(x -> x.contains("ACTION_STOP"));
+                toSaveGs6.removeIf(x -> x.contains("ACTION_STOP"));
+                toSaveGs7.removeIf(x -> x.contains("ACTION_STOP"));
+                toSaveGs8.removeIf(x -> x.contains("ACTION_STOP"));
 
-                System.out.println(toSaveGs);
+//                System.out.println("toSaveGs: " + toSaveGs);
+//                System.out.println("toSaveGs5: " + toSaveGs5);
+//                System.out.println("toSaveGs6: " + toSaveGs6);
+//                System.out.println("toSaveGs7: " + toSaveGs7);
+//                System.out.println("toSaveGs8: " + toSaveGs8);
 
                 File file = new File(JSON_GAMELOGS_PATH + gameIdStr + "/");
                 if (! file.exists()){
@@ -264,6 +281,10 @@ public class Game {
                     throw new Error("Folder specified at "+ JSON_GAMELOGS_PATH +" does not exist nor could be created.");
                 }
                 String textPath = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "["+size+"x"+size+"].txt";
+                String textPath5 = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "[vision5].txt";
+                String textPath6 = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "[vision6].txt";
+                String textPath7 = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "[vision7].txt";
+                String textPath8 = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "[vision8].txt";
 
                 try {
                     PrintWriter textOut = new PrintWriter(textPath);
@@ -274,6 +295,41 @@ public class Game {
 
                 }
 
+                try {
+                    PrintWriter textOut = new PrintWriter(textPath5);
+                    textOut.println(toSaveGs5.toString());
+                    textOut.close();
+                } catch (IOException i) {
+                    i.printStackTrace();
+
+                }
+
+                try {
+                    PrintWriter textOut = new PrintWriter(textPath6);
+                    textOut.println(toSaveGs6.toString());
+                    textOut.close();
+                } catch (IOException i) {
+                    i.printStackTrace();
+
+                }
+
+                try {
+                    PrintWriter textOut = new PrintWriter(textPath7);
+                    textOut.println(toSaveGs7.toString());
+                    textOut.close();
+                } catch (IOException i) {
+                    i.printStackTrace();
+
+                }
+
+                try {
+                    PrintWriter textOut = new PrintWriter(textPath8);
+                    textOut.println(toSaveGs8.toString());
+                    textOut.close();
+                } catch (IOException i) {
+                    i.printStackTrace();
+
+                }
 
                 if (!VISUALS) {
                     // The game has ended, end the loop if we're running without visuals.
@@ -360,10 +416,19 @@ public class Game {
      */
     private Types.ACTIONS[] getAvatarActions() {
         String tempString;
+        String tempString5;
+        String tempString6;
+        String tempString7;
+        String tempString8;
+
         // Get player actions, 1 for each avatar still in the game
         Types.ACTIONS[] actions = new Types.ACTIONS[NUM_PLAYERS];
         for (int i = 0; i < NUM_PLAYERS; i++) {
             tempString = "";
+            tempString5 = "";
+            tempString6 = "";
+            tempString7 = "";
+            tempString8 = "";
             Player p = players.get(i);
 
             GameObject agents [];
@@ -379,6 +444,7 @@ public class Game {
             int boardSize = gs.getBoard().length;
 
             // position to start from  1 instead of 0 - so 1 to 12
+
             float squarePositionFraction = ((Float.parseFloat(tempAvPosition[1]+1) * size) - (size - Float.parseFloat(tempAvPosition[0]+1)))/121;
 
 //            float gsArraywithPosition [][] = new float [size][size];
@@ -417,6 +483,11 @@ public class Game {
             float gsSize7 [][];
             float gsSize8 [][];
 
+            float flat5 [];
+            float flat6 [];
+            float flat7 [];
+            float flat8 [];
+
             for (int y = 5; y < 9; y++) {
                 int z = y;
                 int zvert = y;
@@ -448,10 +519,7 @@ public class Game {
                     yrange--;
                 }
 
-                float flat5 [];
-                float flat6 [];
-                float flat7 [];
-                float flat8 [];
+
 
                 //System.out.println("for dimension " + y+ ", xrange = " + xrange + ", yrange = " + yrange +  ", (minhorizontal, minvertical) = (" + minhorizontal + ", " + minvertical +")" );
                 switch (y) {
@@ -476,6 +544,7 @@ public class Game {
                             }
                             flat5[gsSize5[0].length * gsSize5[1].length] = squarePositionFraction;
                         }
+                        tempString5 = tempString5 + p.toString() + "\t" + Arrays.toString(flat5)  + "\t";
                         //System.out.println("gsSiz5: " + Arrays.deepToString(gsSize5));
                         break;
                     }
@@ -500,6 +569,7 @@ public class Game {
                             }
                             flat6[gsSize6[0].length * gsSize6[1].length] = squarePositionFraction;
                         }
+                        tempString6 = tempString6 + p.toString() + "\t" + Arrays.toString(flat6)  + "\t";
                         //System.out.println("gsSiz6: " + Arrays.deepToString(gsSize6));
                         break;
                     }
@@ -525,7 +595,7 @@ public class Game {
                             }
                             flat7[gsSize7[0].length * gsSize7[1].length] = squarePositionFraction;
                         }
-
+                        tempString7 = tempString7 + p.toString() + "\t" + Arrays.toString(flat7)  + "\t";
                         //System.out.println("flat7: " + Arrays.toString(flat7));
                         break;
                     }
@@ -549,13 +619,12 @@ public class Game {
                             }
                             flat8[gsSize8[0].length * gsSize8[1].length] = squarePositionFraction;
                         }
+                        tempString8 = tempString8 + p.toString() + "\t" + Arrays.toString(flat8)  + "\t";
                         //System.out.println("gsSize8: " + Arrays.deepToString(gsSize8));
                         break;
                     }
                 }
             }
-
-            tempString = tempString + p.toString() + "\t" + Arrays.toString(flatGameState)  + "\t";
 
             // Check if this player is still playing
             if (gameStateObservations[i].winner() == Types.RESULT.INCOMPLETE) {
@@ -584,8 +653,16 @@ public class Game {
             //gs.model.toArray();
             //System.out.println("Player: " + p.getPlayerID() + " " + actions[p.getPlayerID()] + "\n" + gs.model.toArray().toString()+ " " + "\n");
             tempString = tempString + actions[i] + "\n"; // + "\t" + gs.model.toArray().toString();
+            tempString5 = tempString5 + actions[i] + "\n";
+            tempString6 = tempString6 + actions[i] + "\n";
+            tempString7 = tempString7 + actions[i] + "\n";
+            tempString8 = tempString8 + actions[i] + "\n";
             //System.out.println("PlayerID: " + p.getPlayerID() + "\n Player Position: " + avPosition + "\n Game State: " + Arrays.toString(flatGameState)+  "\n Player Action: " + actions[p.getPlayerID()] + "\n");
             toSaveGs.add(tempString);
+            toSaveGs5.add(tempString5);
+            toSaveGs6.add(tempString6);
+            toSaveGs7.add(tempString7);
+            toSaveGs8.add(tempString8);
         }
         //System.out.println(gs.toString());
         return actions;
