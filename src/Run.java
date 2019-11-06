@@ -33,7 +33,7 @@ public class Run {
 
         //default
         if(args.length == 0)
-            args = new String[]{"0", "1", "1", "-1", "5", "4", "4", "2"};
+            args = new String[]{"0", "50", "1", "-1", "5", "5", "5", "5"};
 
         if(args.length != 8) {
             printHelp();

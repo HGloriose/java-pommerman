@@ -446,13 +446,15 @@ public class Game {
             int boardSize = gs.getBoard().length;
 
             // position to start from  1 instead of 0 - so 1 to 12
-            System.out.println("tempAvPosition[0]: " + tempAvPosition[0]+ " tempAvPosition[1]: "+ tempAvPosition[1] + "size: " + size);
-            System.out.println("Float.parseFloat(tempAvPosition[1]+1): "+ Float.parseFloat(tempAvPosition[1]+1));
-            System.out.println("(Float.parseFloat(tempAvPosition[1]+1) * size): "+ (Float.parseFloat(tempAvPosition[1]) * size));
-            System.out.println("Float.parseFloat(tempAvPosition[0]+1): "+ Float.parseFloat(tempAvPosition[0]+1));
-            System.out.println("(size - Float.parseFloat(tempAvPosition[0]+1)): "+ (size - Float.parseFloat(tempAvPosition[0])));
+//            System.out.println("tempAvPosition[0]: " + tempAvPosition[0]+ " tempAvPosition[1]: "+ tempAvPosition[1] + "size: " + size);
+//            System.out.println("Float.parseFloat(tempAvPosition[1]+1): "+ Float.parseFloat(tempAvPosition[1]));
+//            System.out.println("(Float.parseFloat(tempAvPosition[1]+1) * size): "+ (Float.parseFloat(tempAvPosition[1]) * size));
+//            System.out.println("Float.parseFloat(tempAvPosition[0]+1): "+ Float.parseFloat(tempAvPosition[0]));
+//            System.out.println("(size - Float.parseFloat(tempAvPosition[0]+1)): "+ (size - Float.parseFloat(tempAvPosition[0])));
+//            System.out.println("Final: "+ ((Float.parseFloat(tempAvPosition[0])+1 * size) - (size - Float.parseFloat(tempAvPosition[1])))/121);
 
-            float squarePositionFraction = ((Float.parseFloat(tempAvPosition[1]) * size) - (size - Float.parseFloat(tempAvPosition[0])))/121;
+
+            float squarePositionFraction = ((Float.parseFloat(tempAvPosition[0])+1 * size) - (size - Float.parseFloat(tempAvPosition[1])))/121;
 
 //            float gsArraywithPosition [][] = new float [size][size];
 //            for (int x = 0; x < boardSize; x++) {
