@@ -252,6 +252,8 @@ public class Game {
                     }
                 }
 
+                toSaveGs.removeIf(x -> x.contains("ACTION_STOP"));
+
                 System.out.println(toSaveGs);
 
                 File file = new File(JSON_GAMELOGS_PATH + gameIdStr + "/");
@@ -379,21 +381,23 @@ public class Game {
             // position to start from  1 instead of 0 - so 1 to 12
             float squarePositionFraction = ((Float.parseFloat(tempAvPosition[1]+1) * size) - (size - Float.parseFloat(tempAvPosition[0]+1)))/121;
 
-            float gsArraywithPosition [][] = new float [size][size];
-            for (int x = 0; x < boardSize; x++) {
-                for (int y = 0; y < boardSize; y++) {
-                    gsArraywithPosition[x][y] = gsArray[x][y]*squarePositionFraction;
-                    //System.out.println("squarePositionFraction: " + squarePositionFraction);
-                    //System.out.println("gsArraywithPosition[x][y]: " +  gsArraywithPosition[x][y]);
-                }
-            }
+//            float gsArraywithPosition [][] = new float [size][size];
+//            for (int x = 0; x < boardSize; x++) {
+//                for (int y = 0; y < boardSize; y++) {
+//                    gsArraywithPosition[x][y] = gsArray[x][y]*squarePositionFraction;
+//                    //System.out.println("squarePositionFraction: " + squarePositionFraction);
+//                    //System.out.println("gsArraywithPosition[x][y]: " +  gsArraywithPosition[x][y]);
+//                }
+//            }
 
-            float flatGameState [] = new float[boardSize * boardSize];
+            float flatGameState [] = new float[boardSize * boardSize + 1];
             int index = 0;
             for (int x = 0; x < boardSize; x++) {
                 for (int y = 0; y < boardSize; y++) {
-                    flatGameState[index++] = gsArraywithPosition[x][y];
+                    flatGameState[index] = gsArray[x][y];
+                    index++;
                 }
+                flatGameState[boardSize * boardSize] = squarePositionFraction;
             }
 
 
@@ -444,6 +448,11 @@ public class Game {
                     yrange--;
                 }
 
+                float flat5 [];
+                float flat6 [];
+                float flat7 [];
+                float flat8 [];
+
                 //System.out.println("for dimension " + y+ ", xrange = " + xrange + ", yrange = " + yrange +  ", (minhorizontal, minvertical) = (" + minhorizontal + ", " + minvertical +")" );
                 switch (y) {
 
@@ -455,8 +464,17 @@ public class Game {
                         gsSize5 = new float[xrange][yrange];
                         for (int startH = 0; startH < xyrange5[0]; startH++) {
                             for (int startV = 0; startV < xyrange5[1]; startV++) {
-                                gsSize5[startH][startV] = gsArraywithPosition[minhorizontal + startH][minvertical + startV];
+                                gsSize5[startH][startV] = gsArray[minhorizontal + startH][minvertical + startV];
                             }
+                        }
+                        flat5 = new float[gsSize5[0].length * gsSize5[1].length+1];
+                        index = 0;
+                        for (int x = 0; x < gsSize5[0].length; x++) {
+                            for (int yy = 0; yy < gsSize5[1].length; yy++) {
+                                flat5[index] = gsArray[x][yy];
+                                index++;
+                            }
+                            flat5[gsSize5[0].length * gsSize5[1].length] = squarePositionFraction;
                         }
                         //System.out.println("gsSiz5: " + Arrays.deepToString(gsSize5));
                         break;
@@ -470,8 +488,17 @@ public class Game {
                         gsSize6 = new float[xrange][yrange];
                         for (int startH = 0; startH < xyrange6[0]; startH++) {
                             for (int startV = 0; startV < xyrange6[1]; startV++) {
-                                gsSize6[startH][startV] = gsArraywithPosition[minhorizontal + startH][minvertical + startV];
+                                gsSize6[startH][startV] = gsArray[minhorizontal + startH][minvertical + startV];
                             }
+                        }
+                        flat6 = new float[gsSize6[0].length * gsSize6[1].length+1];
+                        index = 0;
+                        for (int x = 0; x < gsSize6[0].length; x++) {
+                            for (int yy = 0; yy < gsSize6[1].length; yy++) {
+                                flat6[index] = gsArray[x][yy];
+                                index++;
+                            }
+                            flat6[gsSize6[0].length * gsSize6[1].length] = squarePositionFraction;
                         }
                         //System.out.println("gsSiz6: " + Arrays.deepToString(gsSize6));
                         break;
@@ -485,10 +512,21 @@ public class Game {
                         gsSize7 = new float[xrange][yrange];
                         for (int startH = 0; startH < xyrange7[0]; startH++) {
                             for (int startV = 0; startV < xyrange7[1]; startV++) {
-                                gsSize7[startH][startV] = gsArraywithPosition[minhorizontal + startH][minvertical + startV];
+                                gsSize7[startH][startV] = gsArray[minhorizontal + startH][minvertical + startV];
                             }
                         }
-                        //System.out.println("gsSize7: " + Arrays.deepToString(gsSize7));
+
+                        flat7 = new float[gsSize7[0].length * gsSize7[1].length+1];
+                        index = 0;
+                        for (int x = 0; x < gsSize7[0].length; x++) {
+                            for (int yy = 0; yy < gsSize7[1].length; yy++) {
+                                flat7[index] = gsArray[x][yy];
+                                index++;
+                            }
+                            flat7[gsSize7[0].length * gsSize7[1].length] = squarePositionFraction;
+                        }
+
+                        //System.out.println("flat7: " + Arrays.toString(flat7));
                         break;
                     }
                     case 8: {
@@ -499,8 +537,17 @@ public class Game {
                         gsSize8 = new float[xrange][yrange];
                         for (int startH = 0; startH < xyrange8[0]; startH++) {
                             for (int startV = 0; startV < xyrange8[1]; startV++) {
-                                gsSize8[startH][startV] = gsArraywithPosition[minhorizontal + startH][minvertical + startV];
+                                gsSize8[startH][startV] = gsArray[minhorizontal + startH][minvertical + startV];
                             }
+                        }
+                        flat8 = new float[gsSize8[0].length * gsSize8[1].length+1];
+                        index = 0;
+                        for (int x = 0; x < gsSize8[0].length; x++) {
+                            for (int yy = 0; yy < gsSize8[1].length; yy++) {
+                                flat8[index] = gsArray[x][yy];
+                                index++;
+                            }
+                            flat8[gsSize8[0].length * gsSize8[1].length] = squarePositionFraction;
                         }
                         //System.out.println("gsSize8: " + Arrays.deepToString(gsSize8));
                         break;
