@@ -1107,7 +1107,7 @@ public class ForwardModel {
         }
         //System.out.println("boardArray: " + Arrays.deepToString(boardArray));
         //return Arrays.deepToString(boardArray);
-        return boardArray
+        return boardArray;
     }
 
     /**

@@ -247,13 +247,6 @@ public class Game {
                 //String path = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "["+size+"x"+size+"].json";
                 String textPath = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "["+size+"x"+size+"].txt";
 
-//                try {
-//                    PrintWriter out = new PrintWriter(path);
-//                    out.println(json);
-//                    out.close();
-//                } catch (IOException i) {
-//                    i.printStackTrace();
-//                }
 
                 try {
                     PrintWriter textOut = new PrintWriter(textPath);
@@ -263,29 +256,6 @@ public class Game {
                 i.printStackTrace();
 
                 }
-
-                // Our example data
-//                List<List<String>> rows = Arrays.asList(
-//                        Arrays.asList("Jean", "author", "Java"),
-//                        Arrays.asList("David", "editor", "Python"),
-//                        Arrays.asList("Scott", "editor", "Node.js")
-//                );
-
-//                FileWriter csvWriter = new FileWriter("new.csv");
-//                csvWriter.append("Name");
-//                csvWriter.append(",");
-//                csvWriter.append("Role");
-//                csvWriter.append(",");
-//                csvWriter.append("Topic");
-//                csvWriter.append("\n");
-//
-//                for (List<String> rowData : rows) {
-//                    csvWriter.append(String.join(",", rowData));
-//                    csvWriter.append("\n");
-//                }
-//
-//                csvWriter.flush();
-//                csvWriter.close();
 
 
                 if (!VISUALS) {
@@ -384,9 +354,30 @@ public class Game {
             agents = gs.getAgents();
             Avatar av = (Avatar) agents[i];
             Vector2d avatarPosition = av.getPosition();
-            String avPosition = avatarPosition.toString();
+            String [] tempAvPosition = (avatarPosition.toString().replace(" : ",",")).split(",");
+            String avPosition= Arrays.toString(tempAvPosition);
 
-            tempString = tempString + p + avPosition + "\t"+ gs.model.toArray()  + "\t";
+            int gsArray [][];
+            gsArray = gs.model.toArray();
+
+            int boardSize = gs.getBoard().length;
+            int flatGameState [] = new int[boardSize * boardSize];
+            int index = 0;
+            for (int x = 0; x < boardSize; x++) {
+                for (int y = 0; y < boardSize; y++) {
+                    flatGameState[index++] = gsArray[x][y];
+                }
+            }
+
+            int gsPositionMatrix [][] = new int[2] [flatGameState.length];
+
+            for (int x = 0; x < 2.; x++) { // Vector2d has a length of 2.
+                for (int y = 0; y < flatGameState.length; y++) {
+                    gsPositionMatrix[x][y] = Integer.parseInt(tempAvPosition[x]) * flatGameState[y] ;
+                }
+            }
+
+            tempString = tempString + p.getPlayerID() + "\t"+ Arrays.deepToString(gsPositionMatrix)  + "\t";
 
             // Check if this player is still playing
             if (gameStateObservations[i].winner() == Types.RESULT.INCOMPLETE) {
@@ -411,10 +402,11 @@ public class Game {
                 actions[i] = Types.ACTIONS.ACTION_STOP;
             }
 
-            System.out.println("Player: " + p.getPlayerID() + " " + actions[p.getPlayerID()] + "\n" +  gs.toString()+ "\n");
+            //System.out.println("Player: " + p.getPlayerID() + " " + actions[p.getPlayerID()] + "\n" +  gs.toString()+ "\n");
             //gs.model.toArray();
             //System.out.println("Player: " + p.getPlayerID() + " " + actions[p.getPlayerID()] + "\n" + gs.model.toArray().toString()+ " " + "\n");
             tempString = tempString + actions[i] + "\n"; // + "\t" + gs.model.toArray().toString();
+            System.out.println("PlayerID: " + p.getPlayerID() + "\n Player Postion: " + avPosition + "\n Game State: " + Arrays.toString(flatGameState)+  "\n Player Action: " + actions[p.getPlayerID()] + "\n");
             toSaveGs.add(tempString);
         }
         //System.out.println(gs.toString());
