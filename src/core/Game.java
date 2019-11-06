@@ -369,15 +369,129 @@ public class Game {
                 }
             }
 
+            // pistion to start from  1 instead of 0 - so 1 to 12
+
             int gsPositionMatrix [][] = new int[2] [flatGameState.length];
 
             for (int x = 0; x < 2.; x++) { // Vector2d has a length of 2.
                 for (int y = 0; y < flatGameState.length; y++) {
-                    gsPositionMatrix[x][y] = Integer.parseInt(tempAvPosition[x]) * flatGameState[y] ;
+                    gsPositionMatrix[x][y] = Integer.parseInt(tempAvPosition[x]+1) * flatGameState[y] ;
                 }
             }
 
-            tempString = tempString + p.getPlayerID() + "\t"+ Arrays.deepToString(gsPositionMatrix)  + "\t";
+
+            int xyrange5 [] = new int [2];
+            int xyrange6 [] = new int [2];
+            int xyrange7 [] = new int [2];
+            int xyrange8 [] = new int [2];
+
+
+            int start5 [] = new int [2];
+            int start6 [] = new int [2];
+            int start7 [] = new int [2];
+            int start8 [] = new int [2];
+
+            int gsSize5 [][];
+            int gsSize6 [][];
+            int gsSize7 [][];
+            int gsSize8 [][];
+
+            for (int y = 5; y < 9; y++) {
+                int z = y;
+                int zvert = y;
+                int minhorizontal = Integer.parseInt(tempAvPosition[0]) - z;
+                int minvertical = Integer.parseInt(tempAvPosition[1]) - z;
+                while (z >= 0) {
+                    if (minhorizontal >= 0) {
+                        break;
+                    } else {
+                        z--;
+                        minhorizontal++;
+                    }
+                }
+                while (zvert >= 0) {
+                    if (minvertical >= 0) {
+                        break;
+                    } else {
+                        zvert--;
+                        minvertical++;
+                    }
+                }
+                int xrange = z + 1 + y;
+                int yrange = zvert + 1 + y;
+
+                while (xrange > y+1) {
+                    xrange--;
+                }
+                while (yrange > y+1) {
+                    yrange--;
+                }
+
+                System.out.println("for dimension " + y+ ", xrange = " + xrange + ", yrange = " + yrange +  ", (minhorizontal, minvertical) = (" + minhorizontal + ", " + minvertical +")" );
+                switch (y) {
+
+                    case 5: {
+                        start5[0] = minhorizontal;
+                        start5[1] = minvertical;
+                        xyrange5[0] = xrange;
+                        xyrange5[1] = yrange;
+                        gsSize5 = new int[xrange][yrange];
+                        for (int startH = 0; startH < xyrange5[0]; startH++) {
+                            for (int startV = 0; startV < xyrange5[1]; startV++) {
+                                gsSize5[startH][startV] = gsArray[minhorizontal + startH][minvertical + startV];
+                            }
+                        }
+                        System.out.println("gsSiz5: " + Arrays.deepToString(gsSize5));
+                        break;
+                    }
+
+                    case 6: {
+                        start6[0] = minhorizontal;
+                        start6[1] = minvertical;
+                        xyrange6[0] = xrange;
+                        xyrange6[1] = yrange;
+                        gsSize6 = new int[xrange][yrange];
+                        for (int startH = 0; startH < xyrange6[0]; startH++) {
+                            for (int startV = 0; startV < xyrange6[1]; startV++) {
+                                gsSize6[startH][startV] = gsArray[minhorizontal + startH][minvertical + startV];
+                            }
+                        }
+                        System.out.println("gsSiz6: " + Arrays.deepToString(gsSize6));
+                        break;
+                    }
+
+                    case 7: {
+                        start7[0] = minhorizontal;
+                        start7[1] = minvertical;
+                        xyrange7[0] = xrange;
+                        xyrange7[1] = yrange;
+                        gsSize7 = new int[xrange][yrange];
+                        for (int startH = 0; startH < xyrange7[0]; startH++) {
+                            for (int startV = 0; startV < xyrange7[1]; startV++) {
+                                gsSize7[startH][startV] = gsArray[minhorizontal + startH][minvertical + startV];
+                            }
+                        }
+                        System.out.println("gsSize7: " + Arrays.deepToString(gsSize7));
+                        break;
+                    }
+                    case 8: {
+                        start8[0] = minhorizontal;
+                        start8[1] = minvertical;
+                        xyrange8[0] = xrange;
+                        xyrange8[1] = yrange;
+                        gsSize8 = new int[xrange][yrange];
+                        for (int startH = 0; startH < xyrange8[0]; startH++) {
+                            for (int startV = 0; startV < xyrange8[1]; startV++) {
+                                gsSize8[startH][startV] = gsArray[minhorizontal + startH][minvertical + startV];
+                            }
+                        }
+                        System.out.println("gsSize8: " + Arrays.deepToString(gsSize8));
+                        break;
+                    }
+                }
+            }
+
+            tempString = tempString + p.getPlayerID() + "\t" + Arrays.deepToString(gsPositionMatrix)  + "\t";
 
             // Check if this player is still playing
             if (gameStateObservations[i].winner() == Types.RESULT.INCOMPLETE) {
@@ -406,7 +520,7 @@ public class Game {
             //gs.model.toArray();
             //System.out.println("Player: " + p.getPlayerID() + " " + actions[p.getPlayerID()] + "\n" + gs.model.toArray().toString()+ " " + "\n");
             tempString = tempString + actions[i] + "\n"; // + "\t" + gs.model.toArray().toString();
-            System.out.println("PlayerID: " + p.getPlayerID() + "\n Player Postion: " + avPosition + "\n Game State: " + Arrays.toString(flatGameState)+  "\n Player Action: " + actions[p.getPlayerID()] + "\n");
+            System.out.println("PlayerID: " + p.getPlayerID() + "\n Player Position: " + avPosition + "\n Game State: " + Arrays.deepToString(gsPositionMatrix)+  "\n Player Action: " + actions[p.getPlayerID()] + "\n");
             toSaveGs.add(tempString);
         }
         //System.out.println(gs.toString());
