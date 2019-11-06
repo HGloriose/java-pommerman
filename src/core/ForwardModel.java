@@ -1032,6 +1032,7 @@ public class ForwardModel {
             stringBuilder.append("*");
         }
         stringBuilder.append("\n");
+
         for (Types.TILETYPE[] gameObjects : board) {
             stringBuilder.append("*");
             for (Types.TILETYPE type : gameObjects) {
@@ -1062,7 +1063,7 @@ public class ForwardModel {
         return stringBuilder.toString();
     }
 
-    public String toArray(){
+    public int[][] toArray(){
         int[][] boardArray;
         boardArray = new int[11][11];
         int j=0;
@@ -1105,7 +1106,8 @@ public class ForwardModel {
         }
         }
         //System.out.println("boardArray: " + Arrays.deepToString(boardArray));
-        return Arrays.deepToString(boardArray);
+        //return Arrays.deepToString(boardArray);
+        return boardArray
     }
 
     /**

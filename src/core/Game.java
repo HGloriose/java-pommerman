@@ -233,7 +233,7 @@ public class Game {
                 firstEnd = false;
                 results = terminate();
                 json = gson.toJson(toSaveGs);
-                System.out.println(toSaveGs);
+                //System.out.println(toSaveGs);
 
                 File file = new File(JSON_GAMELOGS_PATH + gameIdStr + "/");
                 if (! file.exists()){
@@ -244,16 +244,16 @@ public class Game {
                     throw new Error("Folder specified at "+ JSON_GAMELOGS_PATH +" does not exist nor could be created.");
                 }
 
-                String path = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "["+size+"x"+size+"].json";
+                //String path = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "["+size+"x"+size+"].json";
                 String textPath = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "["+size+"x"+size+"].txt";
 
-                try {
-                    PrintWriter out = new PrintWriter(path);
-                    out.println(json);
-                    out.close();
-                } catch (IOException i) {
-                    i.printStackTrace();
-                }
+//                try {
+//                    PrintWriter out = new PrintWriter(path);
+//                    out.println(json);
+//                    out.close();
+//                } catch (IOException i) {
+//                    i.printStackTrace();
+//                }
 
                 try {
                     PrintWriter textOut = new PrintWriter(textPath);
@@ -379,7 +379,14 @@ public class Game {
         for (int i = 0; i < NUM_PLAYERS; i++) {
             tempString = "";
             Player p = players.get(i);
-            tempString = tempString + p + "\t"+ gs.model.toArray().toString() + "\t";
+
+            GameObject agents [];
+            agents = gs.getAgents();
+            Avatar av = (Avatar) agents[i];
+            Vector2d avatarPosition = av.getPosition();
+            String avPosition = avatarPosition.toString();
+
+            tempString = tempString + p + avPosition + "\t"+ gs.model.toArray()  + "\t";
 
             // Check if this player is still playing
             if (gameStateObservations[i].winner() == Types.RESULT.INCOMPLETE) {
@@ -404,12 +411,13 @@ public class Game {
                 actions[i] = Types.ACTIONS.ACTION_STOP;
             }
 
-            //System.out.println("Player: " + p.getPlayerID() + " " + actions[p.getPlayerID()] + "\n" +  gs.toString()+ "\n");
+            System.out.println("Player: " + p.getPlayerID() + " " + actions[p.getPlayerID()] + "\n" +  gs.toString()+ "\n");
             //gs.model.toArray();
             //System.out.println("Player: " + p.getPlayerID() + " " + actions[p.getPlayerID()] + "\n" + gs.model.toArray().toString()+ " " + "\n");
             tempString = tempString + actions[i] + "\n"; // + "\t" + gs.model.toArray().toString();
             toSaveGs.add(tempString);
         }
+        //System.out.println(gs.toString());
         return actions;
     }
 
