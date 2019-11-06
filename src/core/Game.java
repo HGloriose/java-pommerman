@@ -261,13 +261,15 @@ public class Game {
                     }
                 }
 
+
                 toSaveGs.removeIf(x -> x.contains("ACTION_STOP"));
                 toSaveGs5.removeIf(x -> x.contains("ACTION_STOP"));
                 toSaveGs6.removeIf(x -> x.contains("ACTION_STOP"));
                 toSaveGs7.removeIf(x -> x.contains("ACTION_STOP"));
                 toSaveGs8.removeIf(x -> x.contains("ACTION_STOP"));
+                //System.out.println("toSaveGs: " + toSaveGs);
 
-//                System.out.println("toSaveGs: " + toSaveGs);
+
 //                System.out.println("toSaveGs5: " + toSaveGs5);
 //                System.out.println("toSaveGs6: " + toSaveGs6);
 //                System.out.println("toSaveGs7: " + toSaveGs7);
@@ -444,8 +446,13 @@ public class Game {
             int boardSize = gs.getBoard().length;
 
             // position to start from  1 instead of 0 - so 1 to 12
+            System.out.println("tempAvPosition[0]: " + tempAvPosition[0]+ " tempAvPosition[1]: "+ tempAvPosition[1] + "size: " + size);
+            System.out.println("Float.parseFloat(tempAvPosition[1]+1): "+ Float.parseFloat(tempAvPosition[1]+1));
+            System.out.println("(Float.parseFloat(tempAvPosition[1]+1) * size): "+ (Float.parseFloat(tempAvPosition[1]) * size));
+            System.out.println("Float.parseFloat(tempAvPosition[0]+1): "+ Float.parseFloat(tempAvPosition[0]+1));
+            System.out.println("(size - Float.parseFloat(tempAvPosition[0]+1)): "+ (size - Float.parseFloat(tempAvPosition[0])));
 
-            float squarePositionFraction = ((Float.parseFloat(tempAvPosition[1]+1) * size) - (size - Float.parseFloat(tempAvPosition[0]+1)))/121;
+            float squarePositionFraction = (Float.parseFloat(tempAvPosition[1]+0 * size) - (size - Float.parseFloat((tempAvPosition[0]+0))))/121;
 
 //            float gsArraywithPosition [][] = new float [size][size];
 //            for (int x = 0; x < boardSize; x++) {
@@ -625,6 +632,7 @@ public class Game {
                     }
                 }
             }
+            tempString = tempString + p.toString() + "\t" + Arrays.toString(flatGameState)  + "\t";
 
             // Check if this player is still playing
             if (gameStateObservations[i].winner() == Types.RESULT.INCOMPLETE) {
@@ -658,6 +666,7 @@ public class Game {
             tempString7 = tempString7 + actions[i] + "\n";
             tempString8 = tempString8 + actions[i] + "\n";
             //System.out.println("PlayerID: " + p.getPlayerID() + "\n Player Position: " + avPosition + "\n Game State: " + Arrays.toString(flatGameState)+  "\n Player Action: " + actions[p.getPlayerID()] + "\n");
+            //System.out.println("tempString: "+ tempString);
             toSaveGs.add(tempString);
             toSaveGs5.add(tempString5);
             toSaveGs6.add(tempString6);
