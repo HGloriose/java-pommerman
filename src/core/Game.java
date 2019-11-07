@@ -468,7 +468,6 @@ public class Game {
             Avatar av = (Avatar) agents[i];
             Vector2d avatarPosition = av.getPosition();
             String [] tempAvPosition = (avatarPosition.toString().replace(" : ",",")).split(",");
-            String avPosition= Arrays.toString(tempAvPosition);
 
             int gsArray [][];
             gsArray = gs.model.toArray();

@@ -109,7 +109,7 @@ public class GameState {
      * Gets the agents of the game
      * @return the agents of the game
      */
-    GameObject[] getAgents() {
+    public GameObject[] getAgents() {
         return model.getAgents();
     }
 
@@ -389,6 +389,14 @@ public class GameState {
     public String toString() {
         return model.toString();
     }
+
+    public int[][] toArray() {
+        return model.toArray();
+    }
+
+//    public GameObject[] getAgents() {
+//        return model.getAgents();
+//    }
 
     @Override
     public boolean equals(Object o){
