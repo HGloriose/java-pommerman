@@ -31,12 +31,17 @@ public class Run {
 
     public static void main(String[] args) {
 
+
+//2 different observability settings: Fully observable and a vision range of 2.
+//5 different levels, with 10 runs per level and observability setting.
+//You can choose between FFA or TEAM modes (or both).
+
         //default
         if(args.length == 0)
-            args = new String[]{"0", "5", "2", "-1", "5", "5", "5", "5"};
-//        args = new String[]{"0", "50", "1", "-1", "5", "5", "5", "4"};
-//        args = new String[]{"0", "50", "1", "-1", "5", "5", "4", "4"};
-//        args = new String[]{"0", "50", "1", "-1", "5", "4", "4", "2"};
+//            args = new String[]{"0", "5", "10", "2", "5", "5", "5", "5"};
+        args = new String[]{"0", "5", "10", "-1", "5", "5", "5", "4"};
+//        args = new String[]{"0", "5", "10", "-1", "5", "5", "4", "4"};
+//        args = new String[]{"0", "5", "10", "-1", "5", "4", "4", "2"};
 
         if(args.length != 8) {
             printHelp();
