@@ -476,28 +476,36 @@ public class Game {
             }
 
 
+            int xyrange2 [] = new int [2];
+            int xyrange3 [] = new int [2];
             int xyrange5 [] = new int [2];
             int xyrange6 [] = new int [2];
             int xyrange7 [] = new int [2];
             int xyrange8 [] = new int [2];
 
 
+            int start2 [] = new int [2];
+            int start3 [] = new int [2];
             int start5 [] = new int [2];
             int start6 [] = new int [2];
             int start7 [] = new int [2];
             int start8 [] = new int [2];
 
+            float gsSize2 [][];
+            float gsSize3 [][];
             float gsSize5 [][];
             float gsSize6 [][];
             float gsSize7 [][];
             float gsSize8 [][];
 
+            float flat2 [];
+            float flat3 [];
             float flat5 [];
             float flat6 [];
             float flat7 [];
             float flat8 [];
 
-            for (int y = 5; y < 9; y++) {
+            for (int y = 2; y < 9; y++) {
                 int z = y;
                 int zvert = y;
                 int minhorizontal = Integer.parseInt(tempAvPosition[0]) - z;
