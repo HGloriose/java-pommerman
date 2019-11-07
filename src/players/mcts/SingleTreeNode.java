@@ -204,14 +204,13 @@ public class SingleTreeNode
         return selected;
     }
 
-    double [][] weight = {{ 2.19717309e+00,4.64529639e+00,2.77838425e+00,3.06246351e+00,
+    double [][] weight = {
+            { 2.19717309e+00,4.64529639e+00,2.77838425e+00,3.06246351e+00,
             7.41721097e-01,1.87122520e+00,1.45809931e+00,3.64424456e+00,
             2.23077307e+00,-1.52512944e-01},
-
             {-9.55801330e-02,-1.40246906e+00,-4.81308985e-01,-6.75002477e-01,
                     1.11072134e-01,-7.74992338e-01,7.93618695e-03,-1.56797015e+00,
                     2.58024242e-01,-1.49090382e-02},
-
             {-1.34868612e-01,-8.18542144e-01,-1.52756295e+00,-7.88978566e-01,
                     3.88948649e-02,3.35652343e-01,2.44020076e-01,-4.89691340e-01,
                     5.57369693e-01,2.47142935e-01},
@@ -239,7 +238,7 @@ public class SingleTreeNode
 
         GameObject agents [];
         agents = state.getAgents();
-        Avatar av = (Avatar) agents[state.getPlayerId()];
+        Avatar av = (Avatar) agents[playerId];
         Vector2d avatarPosition = av.getPosition();
         String [] tempAvPosition = (avatarPosition.toString().replace(" : ",",")).split(",");
 
@@ -305,10 +304,13 @@ public class SingleTreeNode
 
         double [] results = new double[5];
         // Matrix multiplication
-         for(int i = 0; i<weight[0].length; i++){
+//        System.out.println("weight.length: "+ weight.length);
+//        System.out.println("weight[0].length: "+ weight[0].length);
+//        System.out.println("weight[1].length: "+ weight[1].length);
+         for(int i = 0; i<weight.length; i++){
              int j =0;
              results[i] = 0;
-             while(j<weight[1].length){
+             while(j<weight[0].length){
                  for(int k =0; k<flat2.length; k++){
                      results[i] += weight[i][j] * flat2[k];
                      j++;
@@ -342,10 +344,15 @@ public class SingleTreeNode
 
          // need to pass on the result
         while (!finishRollout(state,thisDepth)) {
+            if (playerId != 0){
+                roll(state, actions[bestAction]);
+            } else{
+                int action = safeRandomAction(state);
+                //System.out.println("safeRandomAction(state): " + action);
+                roll(state, actions[action]);
+            }
             //int action = safeRandomAction(state);
             //System.out.println("safeRandomAction(state): " + action);
-
-            roll(state, actions[bestAction]);
             thisDepth++;
         }
 
