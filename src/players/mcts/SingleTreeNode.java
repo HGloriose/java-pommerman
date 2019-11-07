@@ -339,13 +339,13 @@ public class SingleTreeNode
 
         //String [] actionListLearned = {"ACTION_BOMB","ACTION_DOWN","ACTION_LEFT","ACTION_RIGHT","ACTION_UP"};
         int [] actionListLearnedInx = {5,2,3,4,1};
-         int bestAction = actionListLearnedInx[maxProbindex];
+         int bestActions = actionListLearnedInx[maxProbindex];
 
 
          // need to pass on the result
         while (!finishRollout(state,thisDepth)) {
             if (playerId != 0){
-                roll(state, actions[bestAction]);
+                roll(state, actions[bestActions]);
             } else{
                 int action = safeRandomAction(state);
                 //System.out.println("safeRandomAction(state): " + action);
