@@ -98,8 +98,9 @@ public class SingleTreeNode
                 fmCallsCount+=params.rollout_depth;
                 stop = (fmCallsCount + params.rollout_depth) > params.num_fmcalls;
             }
+            //System.out.println(" ITERS " + numIters);
         }
-        //System.out.println(" ITERS " + numIters);
+
     }
 
     private SingleTreeNode treePolicy(GameState state) {
@@ -154,12 +155,15 @@ public class SingleTreeNode
             if(playerId == i)
             {
                 actionsAll[i] = act;
+                //System.out.println("SingleTreeNode - MSCTPlayer: " + i + " Action: " + actionsAll[i]);
             }else {
                 int actionIdx = m_rnd.nextInt(gs.nActions());
+                //System.out.println("SingleTreeNode - Player: " + i + " Action: " + actionIdx);
                 actionsAll[i] = Types.ACTIONS.all().get(actionIdx);
             }
         }
 
+        //System.out.println("SingleTreeNode - actionsAll: " + actionsAll);
         gs.next(actionsAll);
 
     }
@@ -199,10 +203,12 @@ public class SingleTreeNode
 
     private double rollOut(GameState state)
     {
+        // HERE you change how the next action for MCTS is chosen
         int thisDepth = this.m_depth;
 
         while (!finishRollout(state,thisDepth)) {
             int action = safeRandomAction(state);
+            //System.out.println("safeRandomAction(state): " + action);
             roll(state, actions[action]);
             thisDepth++;
         }

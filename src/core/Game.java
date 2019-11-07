@@ -203,6 +203,8 @@ public class Game {
      */
 
     ArrayList<String> toSaveGs = new ArrayList<String>();
+    ArrayList<String> toSaveGs2 = new ArrayList<String>();
+    ArrayList<String> toSaveGs3 = new ArrayList<String>();
     ArrayList<String> toSaveGs5 = new ArrayList<String>();
     ArrayList<String> toSaveGs6 = new ArrayList<String>();
     ArrayList<String> toSaveGs7 = new ArrayList<String>();
@@ -253,6 +255,8 @@ public class Game {
                             playerId = p.toString();
                             //System.out.println("playerId: " + playerId);
                             toSaveGs.removeIf(x -> x.startsWith(playerId));
+                            toSaveGs2.removeIf(x -> x.startsWith(playerId));
+                            toSaveGs3.removeIf(x -> x.startsWith(playerId));
                             toSaveGs5.removeIf(x -> x.startsWith(playerId));
                             toSaveGs6.removeIf(x -> x.startsWith(playerId));
                             toSaveGs7.removeIf(x -> x.startsWith(playerId));
@@ -263,6 +267,8 @@ public class Game {
 
 
                 toSaveGs.removeIf(x -> x.contains("ACTION_STOP"));
+                toSaveGs3.removeIf(x -> x.contains("ACTION_STOP"));
+                toSaveGs2.removeIf(x -> x.contains("ACTION_STOP"));
                 toSaveGs5.removeIf(x -> x.contains("ACTION_STOP"));
                 toSaveGs6.removeIf(x -> x.contains("ACTION_STOP"));
                 toSaveGs7.removeIf(x -> x.contains("ACTION_STOP"));
@@ -283,32 +289,25 @@ public class Game {
                     throw new Error("Folder specified at "+ JSON_GAMELOGS_PATH +" does not exist nor could be created.");
                 }
                 String textPath = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "["+size+"x"+size+"].txt";
+                String textPath2 = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "[vision2].txt";
+                String textPath3 = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "[vision3].txt";
                 String textPath5 = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "[vision5].txt";
                 String textPath6 = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "[vision6].txt";
                 String textPath7 = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "[vision7].txt";
                 String textPath8 = JSON_GAMELOGS_PATH  + gameIdStr + "/" + seed + "_"+ REP +"_"+  gameMode.name() + "[vision8].txt";
 
-                try {
-                    PrintWriter textOut = new PrintWriter(textPath);
-                    textOut.println(toSaveGs.toString());
-                    textOut.close();
-                } catch (IOException i) {
-                i.printStackTrace();
-
-                }
-
-                try {
-                    PrintWriter textOut = new PrintWriter(textPath5);
-                    textOut.println(toSaveGs5.toString());
-                    textOut.close();
-                } catch (IOException i) {
-                    i.printStackTrace();
-
-                }
+//                try {
+//                    PrintWriter textOut = new PrintWriter(textPath);
+//                    textOut.println(toSaveGs.toString());
+//                    textOut.close();
+//                } catch (IOException i) {
+//                i.printStackTrace();
+//
+//                }
 
                 try {
-                    PrintWriter textOut = new PrintWriter(textPath6);
-                    textOut.println(toSaveGs6.toString());
+                    PrintWriter textOut = new PrintWriter(textPath2);
+                    textOut.println(toSaveGs2.toString());
                     textOut.close();
                 } catch (IOException i) {
                     i.printStackTrace();
@@ -316,22 +315,49 @@ public class Game {
                 }
 
                 try {
-                    PrintWriter textOut = new PrintWriter(textPath7);
-                    textOut.println(toSaveGs7.toString());
+                    PrintWriter textOut = new PrintWriter(textPath3);
+                    textOut.println(toSaveGs3.toString());
                     textOut.close();
                 } catch (IOException i) {
                     i.printStackTrace();
 
                 }
 
-                try {
-                    PrintWriter textOut = new PrintWriter(textPath8);
-                    textOut.println(toSaveGs8.toString());
-                    textOut.close();
-                } catch (IOException i) {
-                    i.printStackTrace();
-
-                }
+//                try {
+//                    PrintWriter textOut = new PrintWriter(textPath5);
+//                    textOut.println(toSaveGs5.toString());
+//                    textOut.close();
+//                } catch (IOException i) {
+//                    i.printStackTrace();
+//
+//                }
+//
+//                try {
+//                    PrintWriter textOut = new PrintWriter(textPath6);
+//                    textOut.println(toSaveGs6.toString());
+//                    textOut.close();
+//                } catch (IOException i) {
+//                    i.printStackTrace();
+//
+//                }
+//
+//                try {
+//                    PrintWriter textOut = new PrintWriter(textPath7);
+//                    textOut.println(toSaveGs7.toString());
+//                    textOut.close();
+//                } catch (IOException i) {
+//                    i.printStackTrace();
+//
+//                }
+//
+//                try {
+//                    PrintWriter textOut = new PrintWriter(textPath8);
+//                    textOut.println(toSaveGs8.toString());
+//                    textOut.close();
+//                } catch (IOException i) {
+//                    i.printStackTrace();
+//
+//                }
 
                 if (!VISUALS) {
                     // The game has ended, end the loop if we're running without visuals.
@@ -418,6 +444,8 @@ public class Game {
      */
     private Types.ACTIONS[] getAvatarActions() {
         String tempString;
+        String tempString2;
+        String tempString3;
         String tempString5;
         String tempString6;
         String tempString7;
@@ -427,6 +455,8 @@ public class Game {
         Types.ACTIONS[] actions = new Types.ACTIONS[NUM_PLAYERS];
         for (int i = 0; i < NUM_PLAYERS; i++) {
             tempString = "";
+            tempString2 = "";
+            tempString3 = "";
             tempString5 = "";
             tempString6 = "";
             tempString7 = "";
@@ -505,7 +535,7 @@ public class Game {
             float flat7 [];
             float flat8 [];
 
-            for (int y = 2; y < 9; y++) {
+            for (int y = 2; y < 3; y++) {
                 int z = y;
                 int zvert = y;
                 int minhorizontal = Integer.parseInt(tempAvPosition[0]) - z;
@@ -540,6 +570,56 @@ public class Game {
 
                 //System.out.println("for dimension " + y+ ", xrange = " + xrange + ", yrange = " + yrange +  ", (minhorizontal, minvertical) = (" + minhorizontal + ", " + minvertical +")" );
                 switch (y) {
+
+                    case 2: {
+                        start2[0] = minhorizontal;
+                        start2[1] = minvertical;
+                        xyrange2[0] = xrange;
+                        xyrange2[1] = yrange;
+                        gsSize2 = new float[xrange][yrange];
+                        for (int startH = 0; startH < xyrange2[0]; startH++) {
+                            for (int startV = 0; startV < xyrange2[1]; startV++) {
+                                gsSize2[startH][startV] = gsArray[minhorizontal + startH][minvertical + startV];
+                            }
+                        }
+                        flat2 = new float[gsSize2[0].length * gsSize2[1].length+1];
+                        index = 0;
+                        for (int x = 0; x < gsSize2[0].length; x++) {
+                            for (int yy = 0; yy < gsSize2[1].length; yy++) {
+                                flat2[index] = gsArray[x][yy];
+                                index++;
+                            }
+                            flat2[gsSize2[0].length * gsSize2[1].length] = squarePositionFraction;
+                        }
+                        tempString2 = tempString2 + p.toString() + "\t" + Arrays.toString(flat2)  + "\t";
+                        //System.out.println("gsSiz2: " + Arrays.deepToString(gsSize2));
+                        break;
+                    }
+
+                    case 3: {
+                        start3[0] = minhorizontal;
+                        start3[1] = minvertical;
+                        xyrange3[0] = xrange;
+                        xyrange3[1] = yrange;
+                        gsSize3 = new float[xrange][yrange];
+                        for (int startH = 0; startH < xyrange3[0]; startH++) {
+                            for (int startV = 0; startV < xyrange3[1]; startV++) {
+                                gsSize3[startH][startV] = gsArray[minhorizontal + startH][minvertical + startV];
+                            }
+                        }
+                        flat3 = new float[gsSize3[0].length * gsSize3[1].length+1];
+                        index = 0;
+                        for (int x = 0; x < gsSize3[0].length; x++) {
+                            for (int yy = 0; yy < gsSize3[1].length; yy++) {
+                                flat3[index] = gsArray[x][yy];
+                                index++;
+                            }
+                            flat3[gsSize3[0].length * gsSize3[1].length] = squarePositionFraction;
+                        }
+                        tempString3 = tempString3 + p.toString() + "\t" + Arrays.toString(flat3)  + "\t";
+                        //System.out.println("gsSiz3: " + Arrays.deepToString(gsSize3));
+                        break;
+                    }
 
                     case 5: {
                         start5[0] = minhorizontal;
@@ -671,6 +751,8 @@ public class Game {
             //gs.model.toArray();
             //System.out.println("Player: " + p.getPlayerID() + " " + actions[p.getPlayerID()] + "\n" + gs.model.toArray().toString()+ " " + "\n");
             tempString = tempString + actions[i] + "\n"; // + "\t" + gs.model.toArray().toString();
+            tempString2 = tempString2 + actions[i] + "\n";
+            tempString3 = tempString3 + actions[i] + "\n";
             tempString5 = tempString5 + actions[i] + "\n";
             tempString6 = tempString6 + actions[i] + "\n";
             tempString7 = tempString7 + actions[i] + "\n";
@@ -678,6 +760,8 @@ public class Game {
             //System.out.println("PlayerID: " + p.getPlayerID() + "\n Player Position: " + avPosition + "\n Game State: " + Arrays.toString(flatGameState)+  "\n Player Action: " + actions[p.getPlayerID()] + "\n");
             //System.out.println("tempString: "+ tempString);
             toSaveGs.add(tempString);
+            toSaveGs2.add(tempString2);
+            toSaveGs3.add(tempString3);
             toSaveGs5.add(tempString5);
             toSaveGs6.add(tempString6);
             toSaveGs7.add(tempString7);
