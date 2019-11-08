@@ -36,12 +36,23 @@ public class Run {
 //5 different levels, with 10 runs per level and observability setting.
 //You can choose between FFA or TEAM modes (or both).
 
+
+//        enhancedMCTS, MCTS, MCTS and MCTS
+//        enhancedMCTS, MCTS, MCTS and OSLAP
+//        enhancedMCTS, MCTS, OSLAP and OSLAP
+//        enhancedMCTS, OLAP, , OSLAP and OSLAP
+
+
         //default
         if(args.length == 0)
-//            args = new String[]{"0", "5", "10", "2", "5", "5", "5", "5"};
-        args = new String[]{"0", "5", "10", "-1", "5", "5", "5", "4"};
-//        args = new String[]{"0", "5", "10", "-1", "5", "5", "4", "4"};
-//        args = new String[]{"0", "5", "10", "-1", "5", "4", "4", "2"};
+//        args = new String[]{"0", "5", "10", "-1", "5", "5", "5", "5"};
+        args = new String[]{"0", "5", "10", "2", "5", "5", "5", "5"};
+
+//        args = new String[]{"0", "5", "10", "-1", "5", "5", "2", "2"};
+//        args = new String[]{"0", "5", "10", "2", "5", "5", "2", "2"};
+
+//        args = new String[]{"0", "5", "10", "-1", "5", "2", "2", "2"};
+//        args = new String[]{"0", "5", "10", "2", "5", "2", "2", "2"};
 
         if(args.length != 8) {
             printHelp();
