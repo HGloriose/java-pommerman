@@ -146,32 +146,91 @@ public class SingleTreeNode
         return tn;
     }
 
-    private void roll(GameState gs, Types.ACTIONS act)
-    {
+    double[][] weight = { //from offline training
+            {
+                    2.19717309e+00,
+                    4.64529639e+00,
+                    2.77838425e+00,
+                    3.06246351e+00,
+                    7.41721097e-01,
+                    1.87122520e+00,
+                    1.45809931e+00,
+                    3.64424456e+00,
+                    2.23077307e+00,
+                    -1.52512944e-01
+            },
+            {
+                    -9.55801330e-02,
+                    -1.40246906e+00,
+                    -4.81308985e-01,
+                    -6.75002477e-01,
+                    1.11072134e-01,
+                    -7.74992338e-01,
+                    7.93618695e-03,
+                    -1.56797015e+00,
+                    2.58024242e-01,
+                    -1.49090382e-02
+            },
+            {
+                    -1.34868612e-01,
+                    -8.18542144e-01,
+                    -1.52756295e+00,
+                    -7.88978566e-01,
+                    3.88948649e-02,
+                    3.35652343e-01,
+                    2.44020076e-01,
+                    -4.89691340e-01,
+                    5.57369693e-01,
+                    2.47142935e-01
+            },
+
+            {
+                    -2.20120303e+00,
+                    -5.98006665e-01,
+                    -1.42887656e-01,
+                    -1.07052096e+00,
+                    9.23005511e-01,
+                    -5.91510628e-01,
+                    -5.11005727e-01,
+                    1.43067703e-01,
+                    5.29314016e-01,
+                    -7.95374392e-02
+            },
+
+            {
+                    2.34478690e-01,
+                    -1.82627851e+00,
+                    -6.26624657e-01,
+                    -5.27961511e-01,
+                    3.13174159e-02,
+                    -8.40374573e-01,
+                    -1.19904985e+00,
+                    -1.72965078e+00,
+                    8.86065121e-01,
+                    -1.83513696e-04
+            }
+    };
+
+    private void roll(GameState gs, Types.ACTIONS act) {
         //Simple, all random first, then my position.
         int nPlayers = 4;
         Types.ACTIONS[] actionsAll = new Types.ACTIONS[4];
         int playerId = gs.getPlayerId() - Types.TILETYPE.AGENT0.getKey();
 
-        for(int i = 0; i < nPlayers; ++i)
-        {
-            if(playerId == i)
-            {
+        for (int i = 0; i < nPlayers; ++i) {
+            if (playerId == i) {
                 actionsAll[i] = act;
-                //System.out.println("SingleTreeNode - MSCTPlayer: " + i + " Action: " + actionsAll[i]);
-            }else {
-                if(playerId !=0) {
+            } else {
+                if (playerId != 0) {
                     int actionIdx = m_rnd.nextInt(gs.nActions());
                     actionsAll[i] = Types.ACTIONS.all().get(actionIdx);
                 } else {
-                    //System.out.println("SingleTreeNode - Player: " + i + " Action: " + actionIdx);
                     int gsArray[][];
                     gsArray = gs.toArray();
                     int size = gs.getBoard().length;
                     float sqrSize = size * size;
 
-//                int playerId = gs.getPlayerId() - Types.TILETYPE.AGENT0.getKey();
-
+                    // Retrieve the game state and transform it into a cross-vision of range 2
                     GameObject agents[];
                     agents = gs.getAgents();
                     Avatar av = (Avatar) agents[playerId];
@@ -180,12 +239,12 @@ public class SingleTreeNode
 
                     float squarePositionFraction = ((Float.parseFloat(tempAvPosition[0]) + 1 * size) - (size - Float.parseFloat(tempAvPosition[1]))) / (sqrSize);
 
-                    int newGsSize = 3;
-
+                    int newGsSize = 2;
                     int z = newGsSize;
                     int zvert = newGsSize;
                     int minhorizontal = Integer.parseInt(tempAvPosition[0]) - z;
                     int minvertical = Integer.parseInt(tempAvPosition[1]) - z;
+
                     while (z >= 0) {
                         if (minhorizontal >= 0) {
                             break;
@@ -239,10 +298,8 @@ public class SingleTreeNode
                     }
 
                     double[] results = new double[5];
+
                     // Matrix multiplication
-//        System.out.println("weight.length: "+ weight.length);
-//        System.out.println("weight[0].length: "+ weight[0].length);
-//        System.out.println("weight[1].length: "+ weight[1].length);
                     for (int ii = 0; ii < weight.length; ii++) {
                         int j = 0;
                         results[ii] = 0;
@@ -276,14 +333,10 @@ public class SingleTreeNode
                     //String [] actionListLearned = {"ACTION_BOMB","ACTION_DOWN","ACTION_LEFT","ACTION_RIGHT","ACTION_UP"};
                     int[] actionListLearnedInx = {5, 2, 3, 4, 1};
                     int bestActions = actionListLearnedInx[maxProbindex];
-
-
                     actionsAll[i] = Types.ACTIONS.all().get(bestActions);
                 }
             }
         }
-
-        //System.out.println("SingleTreeNode - actionsAll: " + actionsAll);
         gs.next(actionsAll);
 
     }
@@ -320,25 +373,6 @@ public class SingleTreeNode
 
         return selected;
     }
-
-    double [][] weight = {
-            { 2.19717309e+00,4.64529639e+00,2.77838425e+00,3.06246351e+00,
-            7.41721097e-01,1.87122520e+00,1.45809931e+00,3.64424456e+00,
-            2.23077307e+00,-1.52512944e-01},
-            {-9.55801330e-02,-1.40246906e+00,-4.81308985e-01,-6.75002477e-01,
-                    1.11072134e-01,-7.74992338e-01,7.93618695e-03,-1.56797015e+00,
-                    2.58024242e-01,-1.49090382e-02},
-            {-1.34868612e-01,-8.18542144e-01,-1.52756295e+00,-7.88978566e-01,
-                    3.88948649e-02,3.35652343e-01,2.44020076e-01,-4.89691340e-01,
-                    5.57369693e-01,2.47142935e-01},
-
-            {-2.20120303e+00,-5.98006665e-01,-1.42887656e-01,-1.07052096e+00,
-                    9.23005511e-01,-5.91510628e-01,-5.11005727e-01,1.43067703e-01,
-                    5.29314016e-01,-7.95374392e-02},
-
-            { 2.34478690e-01,-1.82627851e+00,-6.26624657e-01,-5.27961511e-01,
-                    3.13174159e-02,-8.40374573e-01,-1.19904985e+00,-1.72965078e+00,
-                    8.86065121e-01,-1.83513696e-04}};
 
     private double rollOut(GameState state)
     {
