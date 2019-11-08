@@ -8,9 +8,12 @@ import utils.ElapsedCpuTimer;
 import utils.Types;
 import utils.Utils;
 import utils.Vector2d;
+import objects.GameObject;
+import objects.Avatar;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Arrays;
 
 public class SingleTreeNode
 {
@@ -32,12 +35,12 @@ public class SingleTreeNode
     private GameState rootState;
     private StateHeuristic rootStateHeuristic;
 
-    SingleTreeNode(MCTSParams p, Random rnd, int num_actions, Types.ACTIONS[] actions) {
+    SingleTreeNode(MCTSParams p, Random rnd, int num_actions, Types.ACTIONS[] actions) { //root constructor
         this(p, null, -1, rnd, num_actions, actions, 0, null);
     }
 
     private SingleTreeNode(MCTSParams p, SingleTreeNode parent, int childIdx, Random rnd, int num_actions,
-                           Types.ACTIONS[] actions, int fmCallsCount, StateHeuristic sh) {
+                           Types.ACTIONS[] actions, int fmCallsCount, StateHeuristic sh) { // not root constructor - stateHeuristics: evaluateState(GameState gs) depends on the heuristic used
         this.params = p;
         this.fmCallsCount = fmCallsCount;
         this.parent = parent;
@@ -79,12 +82,12 @@ public class SingleTreeNode
 
             GameState state = rootState.copy();
             ElapsedCpuTimer elapsedTimerIteration = new ElapsedCpuTimer();
-            SingleTreeNode selected = treePolicy(state);
-            double delta = selected.rollOut(state);
-            backUp(selected, delta);
+            SingleTreeNode selected = treePolicy(state); //recomendation policy ? not UCB (in the code though) so selection & expansion
+            double delta = selected.rollOut(state); //simulation
+            backUp(selected, delta); //backpropagation
 
             //Stopping condition
-            if(params.stop_type == params.STOP_TIME) {
+            if(params.stop_type == params.STOP_TIME) { // they are always equal one another, unless update somewhere
                 numIters++;
                 acumTimeTaken += (elapsedTimerIteration.elapsedMillis()) ;
                 avgTimeTaken  = acumTimeTaken/numIters;
@@ -98,8 +101,9 @@ public class SingleTreeNode
                 fmCallsCount+=params.rollout_depth;
                 stop = (fmCallsCount + params.rollout_depth) > params.num_fmcalls;
             }
+            //System.out.println(" ITERS " + numIters);
         }
-        //System.out.println(" ITERS " + numIters);
+
     }
 
     private SingleTreeNode treePolicy(GameState state) {
@@ -142,24 +146,197 @@ public class SingleTreeNode
         return tn;
     }
 
-    private void roll(GameState gs, Types.ACTIONS act)
-    {
+    double[][] weight = { //from offline training
+            {
+                    2.19717309e+00,
+                    4.64529639e+00,
+                    2.77838425e+00,
+                    3.06246351e+00,
+                    7.41721097e-01,
+                    1.87122520e+00,
+                    1.45809931e+00,
+                    3.64424456e+00,
+                    2.23077307e+00,
+                    -1.52512944e-01
+            },
+            {
+                    -9.55801330e-02,
+                    -1.40246906e+00,
+                    -4.81308985e-01,
+                    -6.75002477e-01,
+                    1.11072134e-01,
+                    -7.74992338e-01,
+                    7.93618695e-03,
+                    -1.56797015e+00,
+                    2.58024242e-01,
+                    -1.49090382e-02
+            },
+            {
+                    -1.34868612e-01,
+                    -8.18542144e-01,
+                    -1.52756295e+00,
+                    -7.88978566e-01,
+                    3.88948649e-02,
+                    3.35652343e-01,
+                    2.44020076e-01,
+                    -4.89691340e-01,
+                    5.57369693e-01,
+                    2.47142935e-01
+            },
+
+            {
+                    -2.20120303e+00,
+                    -5.98006665e-01,
+                    -1.42887656e-01,
+                    -1.07052096e+00,
+                    9.23005511e-01,
+                    -5.91510628e-01,
+                    -5.11005727e-01,
+                    1.43067703e-01,
+                    5.29314016e-01,
+                    -7.95374392e-02
+            },
+
+            {
+                    2.34478690e-01,
+                    -1.82627851e+00,
+                    -6.26624657e-01,
+                    -5.27961511e-01,
+                    3.13174159e-02,
+                    -8.40374573e-01,
+                    -1.19904985e+00,
+                    -1.72965078e+00,
+                    8.86065121e-01,
+                    -1.83513696e-04
+            }
+    };
+
+    private void roll(GameState gs, Types.ACTIONS act) {
         //Simple, all random first, then my position.
         int nPlayers = 4;
         Types.ACTIONS[] actionsAll = new Types.ACTIONS[4];
         int playerId = gs.getPlayerId() - Types.TILETYPE.AGENT0.getKey();
 
-        for(int i = 0; i < nPlayers; ++i)
-        {
-            if(playerId == i)
-            {
+        for (int i = 0; i < nPlayers; ++i) {
+            if (playerId == i) {
                 actionsAll[i] = act;
-            }else {
-                int actionIdx = m_rnd.nextInt(gs.nActions());
-                actionsAll[i] = Types.ACTIONS.all().get(actionIdx);
+            } else {
+                if (playerId != 0) {
+                    int actionIdx = m_rnd.nextInt(gs.nActions());
+                    actionsAll[i] = Types.ACTIONS.all().get(actionIdx);
+                } else {
+                    int gsArray[][];
+                    gsArray = gs.toArray();
+                    int size = gs.getBoard().length;
+                    float sqrSize = size * size;
+
+                    // Retrieve the game state and transform it into a cross-vision of range 2
+                    GameObject agents[];
+                    agents = gs.getAgents();
+                    Avatar av = (Avatar) agents[playerId];
+                    Vector2d avatarPosition = av.getPosition();
+                    String[] tempAvPosition = (avatarPosition.toString().replace(" : ", ",")).split(",");
+
+                    float squarePositionFraction = ((Float.parseFloat(tempAvPosition[0]) + 1 * size) - (size - Float.parseFloat(tempAvPosition[1]))) / (sqrSize);
+
+                    int newGsSize = 2;
+                    int z = newGsSize;
+                    int zvert = newGsSize;
+                    int minhorizontal = Integer.parseInt(tempAvPosition[0]) - z;
+                    int minvertical = Integer.parseInt(tempAvPosition[1]) - z;
+
+                    while (z >= 0) {
+                        if (minhorizontal >= 0) {
+                            break;
+                        } else {
+                            z--;
+                            minhorizontal++;
+                        }
+                    }
+                    while (zvert >= 0) {
+                        if (minvertical >= 0) {
+                            break;
+                        } else {
+                            zvert--;
+                            minvertical++;
+                        }
+                    }
+                    int xrange = z + 1 + 2;
+                    int yrange = zvert + 1 + 2;
+
+                    while (xrange > 2 + 1) {
+                        xrange--;
+                    }
+                    while (yrange > 2 + 1) {
+                        yrange--;
+                    }
+
+                    int start2[] = new int[2];
+                    int xyrange2[] = new int[2];
+                    float gsSize2[][];
+                    float flat2[];
+
+                    start2[0] = minhorizontal;
+                    start2[1] = minvertical;
+                    xyrange2[0] = xrange;
+                    xyrange2[1] = yrange;
+
+                    gsSize2 = new float[xrange][yrange];
+                    for (int startH = 0; startH < xyrange2[0]; startH++) {
+                        for (int startV = 0; startV < xyrange2[1]; startV++) {
+                            gsSize2[startH][startV] = gsArray[minhorizontal + startH][minvertical + startV];
+                        }
+                    }
+                    flat2 = new float[gsSize2[0].length * gsSize2[1].length + 1];
+                    int index = 0;
+                    for (int x = 0; x < gsSize2[0].length; x++) {
+                        for (int yy = 0; yy < gsSize2[1].length; yy++) {
+                            flat2[index] = gsArray[x][yy];
+                            index++;
+                        }
+                        flat2[gsSize2[0].length * gsSize2[1].length] = squarePositionFraction;
+                    }
+
+                    double[] results = new double[5];
+
+                    // Matrix multiplication
+                    for (int ii = 0; ii < weight.length; ii++) {
+                        int j = 0;
+                        results[ii] = 0;
+                        while (j < weight[0].length) {
+                            for (int k = 0; k < flat2.length; k++) {
+                                results[ii] += weight[ii][j] * flat2[k];
+                                j++;
+                            }
+                        }
+                        results[i] = Math.exp(results[i]);
+                    }
+
+                    double sum = 0.0;
+                    for (int ii = 0; ii < results.length; ii++) {
+                        sum += results[ii];
+                    }
+
+                    double[] probabilities = new double[5];
+
+                    double maxProb = 0;
+                    int maxProbindex = 0;
+
+                    for (int ii = 0; ii < results.length; ii++) {
+                        probabilities[ii] = results[ii] / sum;
+                        if (probabilities[ii] >= maxProb) {
+                            maxProb = probabilities[ii];
+                            maxProbindex = ii;
+                        }
+                    }
+
+                    //String [] actionListLearned = {"ACTION_BOMB","ACTION_DOWN","ACTION_LEFT","ACTION_RIGHT","ACTION_UP"};
+                    int[] actionListLearnedInx = {5, 2, 3, 4, 1};
+                    int bestActions = actionListLearnedInx[maxProbindex];
+                    actionsAll[i] = Types.ACTIONS.all().get(bestActions);
+                }
             }
         }
-
         gs.next(actionsAll);
 
     }
@@ -170,9 +347,9 @@ public class SingleTreeNode
         for (SingleTreeNode child : this.children)
         {
             double hvVal = child.totValue;
-            double childValue =  hvVal / (child.nVisits + params.epsilon);
+            double childValue =  hvVal / (child.nVisits + params.epsilon); //
 
-            childValue = Utils.normalise(childValue, bounds[0], bounds[1]);
+            childValue = Utils.normalise(childValue, bounds[0], bounds[1]); //- Q(s,a)
 
             double uctValue = childValue +
                     params.K * Math.sqrt(Math.log(this.nVisits + 1) / (child.nVisits + params.epsilon));
@@ -199,11 +376,15 @@ public class SingleTreeNode
 
     private double rollOut(GameState state)
     {
+        // HERE you change how the next action for MCTS is chosen
         int thisDepth = this.m_depth;
 
+         // need to pass on the result
         while (!finishRollout(state,thisDepth)) {
-            int action = safeRandomAction(state);
-            roll(state, actions[action]);
+                int action = safeRandomAction(state);
+                //System.out.println("safeRandomAction(state): " + action);
+                roll(state, actions[action]);
+            //System.out.println("safeRandomAction(state): " + action);
             thisDepth++;
         }
 
@@ -306,7 +487,7 @@ public class SingleTreeNode
         return selected;
     }
 
-    private int bestAction()
+    private int bestAction() //recommendation policy
     {
         int selected = -1;
         double bestValue = -Double.MAX_VALUE;

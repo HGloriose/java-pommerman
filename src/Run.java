@@ -31,9 +31,28 @@ public class Run {
 
     public static void main(String[] args) {
 
+
+//2 different observability settings: Fully observable and a vision range of 2.
+//5 different levels, with 10 runs per level and observability setting.
+//You can choose between FFA or TEAM modes (or both).
+
+
+//        enhancedMCTS, MCTS, MCTS and MCTS
+//        enhancedMCTS, MCTS, MCTS and OSLAP
+//        enhancedMCTS, MCTS, OSLAP and OSLAP
+//        enhancedMCTS, OLAP, , OSLAP and OSLAP
+
+
         //default
         if(args.length == 0)
-            args = new String[]{"0", "1", "1", "-1", "2", "2", "4", "5"};
+//        args = new String[]{"0", "5", "10", "-1", "5", "5", "5", "5"};
+        args = new String[]{"0", "5", "10", "2", "5", "5", "5", "5"};
+
+//        args = new String[]{"0", "5", "10", "-1", "5", "5", "2", "2"};
+//        args = new String[]{"0", "5", "10", "2", "5", "5", "2", "2"};
+
+//        args = new String[]{"0", "5", "10", "-1", "5", "2", "2", "2"};
+//        args = new String[]{"0", "5", "10", "2", "5", "2", "2", "2"};
 
         if(args.length != 8) {
             printHelp();
@@ -64,6 +83,10 @@ public class Run {
                 //Special case, these seeds are fixed for the experiments in the paper:
                 seeds = new long[] {93988, 19067, 64416, 83884, 55636, 27599, 44350, 87872, 40815,
                         11772, 58367, 17546, 75375, 75772, 58237, 30464, 27180, 23643, 67054, 19508};
+                for (int i=0; i < N; i++){
+                    seeds[i] = rnd.nextInt(100000);
+                }
+
             }else
             {
                 if(S <= 0)
@@ -149,7 +172,7 @@ public class Run {
 
             }
             System.out.println("]");
-
+            System.out.println("seeds: "+ seeds.length);
             runGames(game, seeds, N, false);
         } catch(Exception e) {
             e.printStackTrace();
@@ -195,10 +218,15 @@ public class Run {
 
             for (int i = 0; i < repetitions; i++) {
                 long playerSeed = System.currentTimeMillis();
+                System.out.println("seeds.length: " + numSeeds);
+                System.out.println("seeds" + seed);
+                g.reset(seeds[s]);
 
-                System.out.print( playerSeed + ", " + seed + ", " + (s*repetitions + i) + "/" + totalNgames + ", ");
+                System.out.println( playerSeed + ", " + seed + ", " + (s*repetitions + i) + "/" + totalNgames + ", ");
+                //s++;
+                //seed = seeds[s];
 
-                g.reset(seed);
+
                 EventsStatistics.REP = i;
                 GameLog.REP = i;
 
@@ -207,7 +235,11 @@ public class Run {
                 for (int p = 0; p < g.nPlayers(); p++) {
                     players.get(p).reset(playerSeed, p);
                 }
+                    System.out.println("Working Directory = " +
+                            System.getProperty("user.dir"));
+
                 Types.RESULT[] results = g.run(useSeparateThreads);
+
 
                 for (int pIdx = 0; pIdx < numPlayers; pIdx++) {
                     switch (results[pIdx]) {
@@ -226,7 +258,6 @@ public class Run {
                 int[] overtimes = g.getPlayerOvertimes();
                 for(int j = 0; j < overtimes.length; ++j)
                     overtimeCount[j] += overtimes[j];
-
             }
         }
 

@@ -109,7 +109,7 @@ public class GameState {
      * Gets the agents of the game
      * @return the agents of the game
      */
-    GameObject[] getAgents() {
+    public GameObject[] getAgents() {
         return model.getAgents();
     }
 
@@ -229,7 +229,10 @@ public class GameState {
     }
 
     public Types.RESULT winner() {
-        return avatar != null? avatar.getWinner() : Types.RESULT.INCOMPLETE;
+        return avatar != null? avatar.getWinner() : Types.RESULT.INCOMPLETE; // They both retrun the same thing?
+        // ? is a ternary argument - boolean statement ? true result : false result;
+        // if the avatar != null, ie.e if the gameMode !=null that is if the type of game has been specified: FFA or Team or...
+        // true that the gameMode has been defined - then avatar.getWinner() -- return winner --> Types.RESULT.INCOMPLETE --> the game is incomplete?
     }
 
     public int getBlastStrength() {
@@ -386,6 +389,14 @@ public class GameState {
     public String toString() {
         return model.toString();
     }
+
+    public int[][] toArray() {
+        return model.toArray();
+    }
+
+//    public GameObject[] getAgents() {
+//        return model.getAgents();
+//    }
 
     @Override
     public boolean equals(Object o){

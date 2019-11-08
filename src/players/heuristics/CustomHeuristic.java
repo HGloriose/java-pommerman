@@ -4,7 +4,7 @@ import core.GameState;
 import utils.Types;
 
 public class CustomHeuristic extends StateHeuristic {
-    private BoardStats rootBoardStats;
+    private BoardStats rootBoardStats; // class decribe later down
 
     public CustomHeuristic(GameState root) {
         rootBoardStats = new BoardStats(root);
@@ -12,12 +12,12 @@ public class CustomHeuristic extends StateHeuristic {
 
     @Override
     public double evaluateState(GameState gs) {
-        boolean gameOver = gs.isTerminal();
-        Types.RESULT win = gs.winner();
+        boolean gameOver = gs.isTerminal(); // either the tick reached or game completed and agent has not loss.
+        Types.RESULT win = gs.winner(); // I guess this change during the game because right now it is set to incomplete
 
         // Compute a score relative to the root's state.
         BoardStats lastBoardState = new BoardStats(gs);
-        double rawScore = rootBoardStats.score(lastBoardState);
+        double rawScore = rootBoardStats.score(lastBoardState); //if game incomplete?
 
         if(gameOver && win == Types.RESULT.LOSS)
             rawScore = -1;
@@ -28,7 +28,7 @@ public class CustomHeuristic extends StateHeuristic {
         return rawScore;
     }
 
-    public static class BoardStats
+    public static class BoardStats //stats of the game so far
     {
         int tick, nTeammates, nEnemies, blastStrength;
         boolean canKick;
@@ -46,7 +46,7 @@ public class CustomHeuristic extends StateHeuristic {
             nEnemies = gs.getAliveEnemyIDs().size();
 
             // Init weights based on game mode
-            if (gs.getGameMode() == Types.GAME_MODE.FFA) {
+            if (gs.getGameMode() == Types.GAME_MODE.FFA) { //FFA - Free for all - means that all 4 players are competing against one another.
                 FACTOR_TEAM = 0;
                 FACTOR_ENEMY = 0.5;
             } else {

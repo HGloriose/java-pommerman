@@ -16,22 +16,22 @@ public class MCTSParams implements ParameterSet {
 
     public final int STOP_TIME = 0;
     public final int STOP_ITERATIONS = 1;
-    public final int STOP_FMCALLS = 2;
+    public final int STOP_FMCALLS = 2; //FM = Foward model calls?
 
     public final int CUSTOM_HEURISTIC = 0;
-    public final int ADVANCED_HEURISTIC = 1;
+    public final int ADVANCED_HEURISTIC = 1; //whether use the custom or heuristic model?
 
     public double epsilon = 1e-6;
 
     // Parameters
     public double K = Math.sqrt(2); // Constant for UCB1
-    public int rollout_depth = 8;//10; //number of steps the tree cam grow form the tree
+    public int rollout_depth = 8;//10; //number of steps the tree can grow form the tree
     public int heuristic_method = CUSTOM_HEURISTIC; //heurisitc to evaluate the states
 
     // Budget settings
-    public int stop_type = STOP_TIME;
+    public int stop_type = STOP_TIME; //what is stop time?
     public int num_iterations = 200;
-    public int num_fmcalls = 2000;
+    public int num_fmcalls = 2000; //Foward model calls?
     public int num_time = 40;
 
     @Override
